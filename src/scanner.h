@@ -1,10 +1,14 @@
 #ifndef INCLUDE_SRC_SCANNER_H_
 #define INCLUDE_SRC_SCANNER_H_
 
-#include "basic.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <wchar.h>
 
 typedef struct Scanner {
-  char *source;
+  wchar_t *source;
+  size_t length;
+  size_t index;
 } Scanner;
 
 typedef enum Token {
@@ -22,6 +26,9 @@ typedef enum Token {
   END
 } Token;
 
-Basic scan(char *source);
+void scan(wchar_t *source);
+wchar_t advance(Scanner *scanner);
+bool at_end(Scanner *scanner);
+wchar_t peek(Scanner *scanner);
 
 #endif // INCLUDE_SRC_SCANNER_H_
