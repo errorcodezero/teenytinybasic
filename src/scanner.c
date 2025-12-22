@@ -6,15 +6,15 @@
 void scan(wchar_t *source) {
   Scanner scanner = {.source = source, .index = 0, .length = wcslen(source)};
 
-  while(!at_end(&scanner)) {
+  while (!at_end(&scanner)) {
     wchar_t character = advance(&scanner);
+    switch (character) {
+    }
     wprintf(L"%c", character);
   }
 }
 
-bool at_end(Scanner *scanner) {
-  return (scanner->index == scanner->length);
-}
+bool at_end(Scanner *scanner) { return (scanner->index == scanner->length); }
 
 wchar_t advance(Scanner *scanner) {
   if (!at_end(scanner)) {
@@ -23,6 +23,4 @@ wchar_t advance(Scanner *scanner) {
   return '\0';
 }
 
-wchar_t peek(Scanner *scanner) {
-  return scanner->source[scanner->index];
-}
+wchar_t peek(Scanner *scanner) { return scanner->source[scanner->index]; }

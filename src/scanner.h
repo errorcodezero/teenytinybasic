@@ -23,7 +23,22 @@ typedef enum Token {
   CLEAR,
   LIST,
   RUN,
-  END
+  END,
+  LEFT_PAREN,
+  RIGHT_PAREN,
+  PLUS,
+  MINUS,
+  SLASH,
+  LESS_THAN,
+  LESS_THAN_EQUAL,
+  GREATER_THAN,
+  GREATER_THAN_EQUAL,
+  STAR,
+  NOT_EQUAL,
+  EQUAL,
+  AND,
+  NOT,
+  OR
 } Token;
 
 void scan(wchar_t *source);
