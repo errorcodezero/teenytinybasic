@@ -5,10 +5,13 @@
 #include <stddef.h>
 #include <wchar.h>
 
+typedef struct TokensList TokensList;
+
 typedef struct Scanner {
   wchar_t *source;
   size_t length;
   size_t index;
+  TokensList *tokens;
 } Scanner;
 
 typedef enum Token {
@@ -41,9 +44,16 @@ typedef enum Token {
   OR
 } Token;
 
-void scan(wchar_t *source);
+typedef struct TokensList {
+  Token *list;
+  size_t length;
+  size_t capacity;
+} TokensList;
+
+TokensList *scan(wchar_t *source);
 wchar_t advance(Scanner *scanner);
 bool at_end(Scanner *scanner);
 wchar_t peek(Scanner *scanner);
+void push_token(Scanner *scanner, Token token);
 
 #endif // INCLUDE_SRC_SCANNER_H_
