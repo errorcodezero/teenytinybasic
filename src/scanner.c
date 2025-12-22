@@ -12,11 +12,11 @@ TokensList *scan(wchar_t *source) {
   while (!at_end(&scanner)) {
     wchar_t character = advance(&scanner);
     switch (character) {
-    case '+': {
+    case L'+': {
       push_token(&scanner, PLUS);
       break;
     }
-    case '-': {
+    case L'-': {
       push_token(&scanner, MINUS);
       break;
     }
@@ -40,7 +40,9 @@ wchar_t peek(Scanner *scanner) { return scanner->source[scanner->index]; }
 
 void push_token(Scanner *scanner, Token token) {
   if (scanner->tokens == NULL) {
-    scanner->tokens->list = calloc(1, sizeof(Token));
+    scanner->tokens = calloc(1, sizeof(TokensList));
+    Token* list = calloc(1, sizeof(Token));
+    scanner->tokens->list = list;
     scanner->tokens->length = 0;
     scanner->tokens->capacity = 1;
   }
