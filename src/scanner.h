@@ -1,20 +1,28 @@
 #ifndef INCLUDE_SRC_SCANNER_H_
 #define INCLUDE_SRC_SCANNER_H_
 
+#include "basic.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <wchar.h>
 
-typedef struct TokensList TokensList;
+typedef struct Parser Parser;
+typedef struct Token Token;
+
+typedef struct TokensList {
+  Token *list;
+  size_t length;
+  size_t capacity;
+} TokensList;
 
 typedef struct Scanner {
   wchar_t *source;
   size_t length;
   size_t index;
-  TokensList *tokens;
+  TokensList tokens;
 } Scanner;
 
-typedef enum Token {
+typedef enum TokenType {
   PRINT,
   IF,
   THEN,
@@ -41,20 +49,23 @@ typedef enum Token {
   EQUAL,
   AND,
   NOT,
-  OR
+  OR,
+  NUMBER
+} TokenType;
+
+typedef struct Token {
+  TokenType token_type;
+  size_t line;
+  wchar_t *data;
 } Token;
 
-typedef struct TokensList {
-  Token *list;
-  size_t length;
-  size_t capacity;
-} TokensList;
-
-TokensList *scan(wchar_t *source);
+void scan(wchar_t *source, Parser *parser);
 wchar_t advance(Scanner *scanner);
 wchar_t back(Scanner *scanner);
 bool at_end(Scanner *scanner);
 wchar_t peek(Scanner *scanner);
-void push_token(Scanner *scanner, Token token);
+void push_token(Scanner *scanner, TokenType token, size_t line);
+void push_token_with_data(Scanner *scanner, TokenType token, size_t line,
+                          wchar_t *data);
 
 #endif // INCLUDE_SRC_SCANNER_H_

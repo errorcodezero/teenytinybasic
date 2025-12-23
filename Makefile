@@ -2,7 +2,7 @@ SRC_DIR = src
 BUILD_DIR = build
 EXE = teenytinybasic
 
-SRC = main.c scanner.c basic.c
+SRC = main.c scanner.c basic.c parser.c
 OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
 
 CFLAGS += -std=c11 -Wall -Wextra -Werror -pedantic
