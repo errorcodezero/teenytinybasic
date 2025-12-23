@@ -4,8 +4,8 @@
 #include <wchar.h>
 
 int main() {
-  wchar_t *text = L"(-123.456) + 324 * 4 - 5 >= 4";
-  // wchar_t *text = L"12323123123123";
+  // wchar_t *text = L"(-123.456) + 324 * 4 - 5 >= 4";
+  wchar_t *text = L"12323123123123";
   Parser parser = {.tokens = {.list = NULL, .length = 0, .capacity = 0}};
   scan(text, &parser);
 
