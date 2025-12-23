@@ -52,6 +52,7 @@ typedef struct TokensList {
 
 TokensList *scan(wchar_t *source);
 wchar_t advance(Scanner *scanner);
+wchar_t back(Scanner *scanner);
 bool at_end(Scanner *scanner);
 wchar_t peek(Scanner *scanner);
 void push_token(Scanner *scanner, Token token);
