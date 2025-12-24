@@ -6,20 +6,26 @@
 #include <string.h>
 #include <wchar.h>
 
-#define SINGLE_CHARACTER_SCAN(SCANNER, CHARACTER, CASE, TOKEN, LINE)           \
-  if (CHARACTER == CASE) {                                                     \
-    push_token(&SCANNER, TOKEN, LINE);                                         \
+#define SINGLE_CHARACTER_SCAN(CASE, TOKEN)                                     \
+  if (character == CASE) {                                                     \
+    push_token(&scanner, TOKEN, line);                                         \
     continue;                                                                  \
   }
 
-#define DOUBLE_CHARACTER_SCAN(SCANNER, CHARACTER, CASE, TOKEN, LINE)           \
-  if (CHARACTER == CASE[0]) {                                                  \
-    bool matches = advance(&SCANNER) == CASE[1];                               \
+#define DOUBLE_CHARACTER_SCAN(CASE, TOKEN)                                     \
+  if (character == CASE[0]) {                                                  \
+    bool matches = advance(&scanner) == CASE[1];                               \
     if (matches) {                                                             \
-      push_token(&SCANNER, TOKEN, LINE);                                       \
+      push_token(&scanner, TOKEN, line);                                       \
       continue;                                                                \
     } else                                                                     \
-      back(&SCANNER);                                                          \
+      back(&scanner);                                                          \
+  }
+
+#define KEYWORD(WORD, TOKEN)                                                   \
+  if (!wcscmp(WORD, identifier_fit)) {                                         \
+    flag = true;                                                               \
+    push_token(&scanner, TOKEN, line);                                         \
   }
 
 void scan(wchar_t *source, Parser *parser) {
@@ -32,17 +38,19 @@ void scan(wchar_t *source, Parser *parser) {
 
   while (!at_end(&scanner)) {
     wchar_t character = advance(&scanner);
-    SINGLE_CHARACTER_SCAN(scanner, character, '+', PLUS, line)
-    SINGLE_CHARACTER_SCAN(scanner, character, '-', MINUS, line)
-    SINGLE_CHARACTER_SCAN(scanner, character, '(', LEFT_PAREN, line)
-    SINGLE_CHARACTER_SCAN(scanner, character, ')', RIGHT_PAREN, line)
-    SINGLE_CHARACTER_SCAN(scanner, character, '=', EQUAL, line)
-    DOUBLE_CHARACTER_SCAN(scanner, character, L"<>", NOT_EQUAL, line)
-    DOUBLE_CHARACTER_SCAN(scanner, character, L"<=", LESS_THAN_EQUAL, line)
-    SINGLE_CHARACTER_SCAN(scanner, character, '<', LESS_THAN, line)
-    DOUBLE_CHARACTER_SCAN(scanner, character, L">=", GREATER_THAN_EQUAL, line)
-    SINGLE_CHARACTER_SCAN(scanner, character, '>', GREATER_THAN, line)
-    SINGLE_CHARACTER_SCAN(scanner, character, '*', STAR, line)
+    SINGLE_CHARACTER_SCAN('+', PLUS)
+    SINGLE_CHARACTER_SCAN('-', MINUS)
+    SINGLE_CHARACTER_SCAN('(', LEFT_PAREN)
+    SINGLE_CHARACTER_SCAN(')', RIGHT_PAREN)
+    SINGLE_CHARACTER_SCAN('=', EQUAL)
+    DOUBLE_CHARACTER_SCAN(L"<>", NOT_EQUAL)
+    DOUBLE_CHARACTER_SCAN(L"<=", LESS_THAN_EQUAL)
+    SINGLE_CHARACTER_SCAN('<', LESS_THAN)
+    DOUBLE_CHARACTER_SCAN(L">=", GREATER_THAN_EQUAL)
+    SINGLE_CHARACTER_SCAN('>', GREATER_THAN)
+    SINGLE_CHARACTER_SCAN('*', STAR)
+    if (character == L' ')
+      continue;
     // newline
     if (character == L'\n') {
       line++;
@@ -71,6 +79,40 @@ void scan(wchar_t *source, Parser *parser) {
       number = NULL;
       push_token_with_data(&scanner, NUMBER, line, number_fit);
       if (('0' > character || character > '9') && character != '\0') {
+        back(&scanner);
+      }
+    } else {
+      wchar_t *identifier = malloc(sizeof(wchar_t) * 2);
+      size_t capacity = 2;
+      size_t length = 2;
+      identifier[0] = character;
+      identifier[1] = '\0';
+      character = advance(&scanner);
+      while (('a' <= character && character <= 'z') ||
+             ('A' <= character && character <= 'Z') ||
+             ('0' <= character && character <= '9')) {
+        if (length >= capacity) {
+          capacity *= 2;
+          capacity++;
+          identifier = realloc(identifier, sizeof(wchar_t) * capacity);
+        }
+        identifier[length - 1] = character;
+        identifier[length++] = '\0';
+        character = advance(&scanner);
+      }
+      wchar_t *identifier_fit = malloc(sizeof(wchar_t) * length);
+      wcscpy(identifier_fit, identifier);
+      free(identifier);
+      identifier = NULL;
+      bool flag = false;
+      KEYWORD(L"OR", OR);
+      KEYWORD(L"AND", AND);
+      KEYWORD(L"NOT", NOT);
+      if (!flag) {
+        push_token_with_data(&scanner, IDENTIFIER, line, identifier_fit);
+      }
+      if (('a' > character || character > 'z') &&
+          ('A' > character || character > 'Z') && character != '\0') {
         back(&scanner);
       }
     }
