@@ -54,6 +54,7 @@ void scan(wchar_t *source, Parser *parser) {
       continue;
     // newline
     if (character == L'\n') {
+      push_token(&scanner, NEWLINE, line++);
       line++;
       continue;
     }

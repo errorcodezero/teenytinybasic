@@ -52,7 +52,8 @@ typedef enum TokenType {
   OR,
   NUMBER,
   IDENTIFIER,
-  STRING
+  STRING,
+  NEWLINE
 } TokenType;
 
 typedef struct Token {
