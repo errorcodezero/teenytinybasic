@@ -108,6 +108,18 @@ void scan(wchar_t *source, Parser *parser) {
       KEYWORD(L"OR", OR);
       KEYWORD(L"AND", AND);
       KEYWORD(L"NOT", NOT);
+      KEYWORD(L"GOTO", GOTO);
+      KEYWORD(L"PRINT", PRINT);
+      KEYWORD(L"IF", IF);
+      KEYWORD(L"THEN", THEN);
+      KEYWORD(L"INPUT", INPUT);
+      KEYWORD(L"LET", LET);
+      KEYWORD(L"GOSUB", GOSUB);
+      KEYWORD(L"RETURN", RETURN);
+      KEYWORD(L"CLEAR", CLEAR);
+      KEYWORD(L"LIST", LIST);
+      KEYWORD(L"RUN", RUN);
+      KEYWORD(L"END", END);
       if (!flag) {
         push_token_with_data(&scanner, IDENTIFIER, line, identifier_fit);
       }
