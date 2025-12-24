@@ -6,7 +6,8 @@
 int main(void) {
   // wchar_t *text = L"(-123.456) + 324 * 4 - 5 >= 4";
   // wchar_t *text = L"12323123123123";
-  wchar_t *text = L"OR AND NOT";
+  // wchar_t *text = L"OR AND NOT";
+  wchar_t *text = L"10 PRINT \"HELLO WORLD\\\"\"\nEND";
   Parser parser = {.tokens = {.list = NULL, .length = 0, .capacity = 0}};
   scan(text, &parser);
 

@@ -26,6 +26,7 @@
   if (!wcscmp(WORD, identifier_fit)) {                                         \
     flag = true;                                                               \
     push_token(&scanner, TOKEN, line);                                         \
+    continue;                                                                  \
   }
 
 void scan(wchar_t *source, Parser *parser) {
@@ -54,9 +55,39 @@ void scan(wchar_t *source, Parser *parser) {
     // newline
     if (character == L'\n') {
       line++;
+      continue;
+    }
+    // string
+    if (character == '"') {
+      bool backslashed = false;
+      wchar_t *string = malloc(sizeof(wchar_t) * 2);
+      size_t capacity = 1;
+      size_t length = 1;
+      string[0] = '\0';
+      character = advance(&scanner);
+      while (character != '"' || backslashed) {
+        if (length >= capacity) {
+          capacity *= 2;
+          capacity++;
+          string = realloc(string, sizeof(wchar_t) * capacity);
+        }
+        string[length - 1] = character;
+        string[length++] = '\0';
+        if (character == '\\') {
+          backslashed = true;
+        } else {
+          backslashed = false;
+        }
+        character = advance(&scanner);
+      }
+      wchar_t *string_fit = malloc(sizeof(wchar_t) * length);
+      wcscpy(string_fit, string);
+      free(string);
+      string = NULL;
+      push_token_with_data(&scanner, STRING, line, string_fit);
     }
     // number parsing
-    if ('0' <= character && character <= '9') {
+    else if ('0' <= character && character <= '9') {
       wchar_t *number = malloc(sizeof(wchar_t) * 2);
       size_t capacity = 2;
       size_t length = 2;
