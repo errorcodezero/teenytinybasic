@@ -54,7 +54,7 @@ void scan(wchar_t *source, Parser *parser) {
       continue;
     // newline
     if (character == L'\n') {
-      push_token(&scanner, NEWLINE, line++);
+      push_token(&scanner, NEW_LINE, line++);
       line++;
       continue;
     }
@@ -161,6 +161,8 @@ void scan(wchar_t *source, Parser *parser) {
       }
     }
   }
+
+  push_token(&scanner, END_OF_FILE, line);
 
   parser->tokens.list = scanner.tokens.list;
   parser->tokens.capacity = scanner.tokens.capacity;

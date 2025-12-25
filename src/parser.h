@@ -5,6 +5,7 @@
 
 struct Parser {
   TokensList tokens;
+  size_t index;
 };
 
 // Recursive Descent
@@ -23,6 +24,7 @@ void run(Parser *parser);
 void end(Parser *parser);
 
 // Helper functions
-Token *advance();
+Token *advance_parser(Parser *parser);
+bool at_end_parser(Parser *parser);
 
 #endif // INCLUDE_SRC_PARSER_H_

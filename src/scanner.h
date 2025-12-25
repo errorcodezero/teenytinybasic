@@ -53,7 +53,8 @@ typedef enum TokenType {
   NUMBER,
   IDENTIFIER,
   STRING,
-  NEWLINE
+  NEW_LINE,
+  END_OF_FILE,
 } TokenType;
 
 typedef struct Token {
